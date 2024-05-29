@@ -22,5 +22,22 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h) override;
 		void dragEvent(ofDragInfo dragInfo) override;
 		void gotMessage(ofMessage msg) override;
+    
+    
+    ofTrueTypeFont bodyFont;
+    ofTrueTypeFont headFont;
+    
+    ofVideoPlayer videoPlayer;
+    
+    int videoNum = 0;
+    /**
+     0: intro
+     1: corn
+     2: cow
+     3: pigeon
+     4: candle
+     5: outro
+     */
+    bool videoPlaying = false;
 		
 };
