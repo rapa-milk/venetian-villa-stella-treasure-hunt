@@ -1,5 +1,5 @@
 #include "ofApp.h"
-struct stage; //the game has different phases to make sure all the context is correct for each phase this struct handles it
+int stage = 0; //the game has different phases to make sure all the context is correct for each phase this struct handles it
 
 
 ofTrueTypeFont bodyFont;
@@ -67,40 +67,50 @@ void ofApp::draw(){
         videoPlayer.draw(100,100, 500,500);
     }
     
-    ofSetColor(88, 88, 4);
-
     ofRectangle(100,100,100,100);
-    
-   
-    ofDrawRectRounded(ofGetWidth()/2-100, ofGetHeight()/2-50, 200, 100, 40);
-    
-    ofSetColor(243, 214, 186);
 
-    string codeText ;
-    if(inCode[0] == 0){
-        codeText.append("- ");
+    if(codeMode){
+        
+        ofSetColor(88, 88, 4);
+        
+        ofDrawRectRounded(ofGetWidth()/2-100, ofGetHeight()/2-50, 200, 100, 40);
+        
+        ofSetColor(243, 214, 186);
+        
+        string codeText ;
+        if(inCode[0] == 0){
+            codeText.append("- ");
+        }else{
+            codeText.append(to_string(inCode[0]));
+        }
+        if(inCode[1] == 0){
+            codeText.append("- ");
+        }else{
+            codeText.append(to_string(inCode[1]));
+        }
+        if(inCode[2] == 0){
+            codeText.append("- ");
+        }else{
+            codeText.append(to_string(inCode[2]));
+        }
+        if(inCode[3] == 0){
+            codeText.append("- ");
+        }else{
+            codeText.append(to_string(inCode[3]));
+        }
+        
+        bodyFont.drawString(codeText, ofGetWidth()/2-90, ofGetHeight()/2+30);
+        
     }else{
-        codeText.append(to_string(inCode[0]));
+        
+        //logic for serial com with rfid
+        
+        
     }
-    if(inCode[1] == 0){
-        codeText.append("- ");
-    }else{
-        codeText.append(to_string(inCode[1]));
-    }
-    if(inCode[2] == 0){
-        codeText.append("- ");
-    }else{
-        codeText.append(to_string(inCode[2]));
-    }
-    if(inCode[3] == 0){
-        codeText.append("- ");
-    }else{
-        codeText.append(to_string(inCode[3]));
-    }
-  
-    bodyFont.drawString(codeText, ofGetWidth()/2-90, ofGetHeight()/2+30);
-
 }
+
+
+
 
 //--------------------------------------------------------------
 void ofApp::exit(){
@@ -166,9 +176,8 @@ void ofApp::keyPressed(int key){
                     
             if(iCode >= 4 ){
                 if( isCode(0,inCode ,codes)){
-                    videoPlayer.closeMovie();
-                    videoPlayer.load("videos/1-corn.mp4");
-                    videoPlayer.play();
+
+                    stageVideoPlayer(stage, &videoPlayer);
 
                 }
                 iCode = 0;
@@ -177,11 +186,48 @@ void ofApp::keyPressed(int key){
                 }
             }
             inCode[iCode] = key-48;
-            cout<<inCode[iCode]<<" ,"<<codes[0][iCode]<<endl;
+            cout<<inCode[iCode]<<" ,"<<codes[stage*4][iCode]<<endl;
 
             iCode ++;
         }
     }
+
+}
+
+
+void ofApp::stageVideoPlayer(int appStage, ofVideoPlayer *appVideoPlayer){
+    cout<<"stageVideoPlayer func:"<<appStage<<endl;
+    appVideoPlayer->closeMovie();
+
+    switch (appStage) {
+        case 0:
+            appVideoPlayer->load("videos/welcome.mp4");
+            break;
+            
+        case 1:
+            appVideoPlayer->load("videos/1-corn.mp4");
+            break;
+            
+        case 2:
+            appVideoPlayer->load("videos/2-cow.mp4");
+            break;
+        case 3:
+            appVideoPlayer->load("videos/3-pigeon.mp4");
+            break;
+            
+        case 4:
+            appVideoPlayer->load("videos/4-candle.mp4");
+            break;
+            
+        case 5:
+            
+            appVideoPlayer->load("videos/goodbye.mp4");
+            break;
+            
+        default:
+            break;
+    }
+    appVideoPlayer->play();
 
 }
 
