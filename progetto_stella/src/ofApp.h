@@ -24,20 +24,5 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg) override;
     
     
-    ofTrueTypeFont bodyFont;
-    ofTrueTypeFont headFont;
     
-    ofVideoPlayer videoPlayer;
-    
-    int videoNum = 0;
-    /**
-     0: intro
-     1: corn
-     2: cow
-     3: pigeon
-     4: candle
-     5: outro
-     */
-    bool videoPlaying = false;
-		
 };

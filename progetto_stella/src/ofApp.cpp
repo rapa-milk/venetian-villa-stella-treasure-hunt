@@ -1,5 +1,36 @@
 #include "ofApp.h"
+struct stage; //the game has different phases to make sure all the context is correct for each phase this struct handles it
 
+
+ofTrueTypeFont bodyFont;
+ofTrueTypeFont headFont;
+
+ofVideoPlayer videoPlayer;
+
+int videoNum = 0;
+
+/**
+ 0: intro
+ 1: corn
+ 2: cow
+ 3: pigeon
+ 4: candle
+ 5: outro
+ */
+bool videoPlaying = false;
+
+//    string ofSystemTextBoxDialog(string question, string text);
+int inCode[4];//4 integers form the code e.g. 1234
+
+int iCode = 0;
+bool codeMode = true;
+
+
+int codes[4][4]= {
+    {1,5,7,3},//corn
+    {8,5,2,9},//cow
+    {4,3,7,1},//candle
+    {3,8,2,6}};//pigeon
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(255, 242, 204);
@@ -18,6 +49,13 @@ void ofApp::setup(){
 void ofApp::update(){
 
     videoPlayer.update();
+    
+//    if(e.widget->getName() == "InputPhrase")
+//        {
+//            ofxUITextInput *textInput = (ofxUITextInput *) e.widget;
+//            inputPhrase = textInput->getTextString();
+//            cout<<"InputPhrase: " + inputPhrase<<endl;
+//        }
 }
 
 //--------------------------------------------------------------
@@ -32,6 +70,36 @@ void ofApp::draw(){
     ofSetColor(88, 88, 4);
 
     ofRectangle(100,100,100,100);
+    
+   
+    ofDrawRectRounded(ofGetWidth()/2-100, ofGetHeight()/2-50, 200, 100, 40);
+    
+    ofSetColor(243, 214, 186);
+
+    string codeText ;
+    if(inCode[0] == 0){
+        codeText.append("- ");
+    }else{
+        codeText.append(to_string(inCode[0]));
+    }
+    if(inCode[1] == 0){
+        codeText.append("- ");
+    }else{
+        codeText.append(to_string(inCode[1]));
+    }
+    if(inCode[2] == 0){
+        codeText.append("- ");
+    }else{
+        codeText.append(to_string(inCode[2]));
+    }
+    if(inCode[3] == 0){
+        codeText.append("- ");
+    }else{
+        codeText.append(to_string(inCode[3]));
+    }
+  
+    bodyFont.drawString(codeText, ofGetWidth()/2-90, ofGetHeight()/2+30);
+
 }
 
 //--------------------------------------------------------------
@@ -41,8 +109,9 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    switch (key) {
-        case 'w':            
+    /*
+     switch (key) {
+        case 'w':
             videoPlayer.closeMovie();
             videoPlayer.load("videos/welcome.mp4");
             videoPlayer.play();
@@ -74,6 +143,44 @@ void ofApp::keyPressed(int key){
             break;
         default:
             break;
+    }*/
+    
+    cout<<key<<endl;
+    //0-9 --> 48-57 --> key-48 = num
+    
+    if(codeMode){
+        if(key>=48 && key<=57){
+            auto isCode = [] (int n, int incodeArray[4], int codesArray[4][4]) {
+                for(int i = 0; i<4; i++){
+                    if(incodeArray[i] != codesArray[n][i]){
+                        cout<<"wrong code"<<endl;
+                        return false;
+                        break;
+                    }else if(i == 3){
+                        cout<<"right code"<<endl;
+                        return true;
+                    }
+                }
+                return false;
+            };
+                    
+            if(iCode >= 4 ){
+                if( isCode(0,inCode ,codes)){
+                    videoPlayer.closeMovie();
+                    videoPlayer.load("videos/1-corn.mp4");
+                    videoPlayer.play();
+
+                }
+                iCode = 0;
+                for(int i=0; i<4; i++) {
+                    inCode[i] = 0;
+                }
+            }
+            inCode[iCode] = key-48;
+            cout<<inCode[iCode]<<" ,"<<codes[0][iCode]<<endl;
+
+            iCode ++;
+        }
     }
 
 }
