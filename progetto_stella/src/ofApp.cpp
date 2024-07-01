@@ -6,6 +6,9 @@ ofTrueTypeFont bodyFont;
 ofTrueTypeFont headFont;
 
 ofVideoPlayer videoPlayer;
+ofImage icon;
+
+int videoX, videoY, videoSize;
 
 int playX ,playY, playSize;
 
@@ -42,18 +45,29 @@ void ofApp::setup(){
 
     //loading first video
 //    videoPlayer.load("videos/welcome.mp4");
-    videoPlayer.setLoopState(OF_LOOP_NONE);
+//    videoPlayer.setLoopState(OF_LOOP_NONE);
     playX = ofGetWidth()/2;
     playY = ofGetHeight()/2;
     playSize=100;
+    
+    videoSize =1000;
+    videoX = ofGetWidth()/2- videoSize/2;
+    videoY = ofGetHeight()/2 - videoSize/2;
 
+
+    videoPlayer.getIsMovieDone();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    videoPlayer.setLoopState(OF_LOOP_NONE);
 
     videoPlayer.update();
-    
+    if(videoPlayer.getIsMovieDone() && videoPlaying){
+        cout<<"video done playing"<<endl;
+        videoPlayer.closeMovie();
+        videoPlaying =false;
+    }
 //    if(e.widget->getName() == "InputPhrase")
 //        {
 //            ofxUITextInput *textInput = (ofxUITextInput *) e.widget;
@@ -68,7 +82,7 @@ void ofApp::draw(){
 //    bodyFont.drawString("Body", 100,100);
     
     if(videoPlayer.isLoaded() ){
-        videoPlayer.draw(100,100, 500,500);
+        videoPlayer.draw(videoX,videoY, videoSize,videoSize);
     }
     
     ofRectangle(100,100,100,100);
@@ -86,34 +100,43 @@ void ofApp::draw(){
             bodyFont.drawString(">", ofGetWidth()/2-15, ofGetHeight()/2+20);
 
         }else if(stage>0){
-            string codeText ;
-            if(inCode[0] == 0){
-                codeText.append("- ");
-            }else{
-                codeText.append(to_string(inCode[0]));
-            }
-            if(inCode[1] == 0){
-                codeText.append("- ");
-            }else{
-                codeText.append(to_string(inCode[1]));
-            }
-            if(inCode[2] == 0){
-                codeText.append("- ");
-            }else{
-                codeText.append(to_string(inCode[2]));
-            }
-            if(inCode[3] == 0){
-                codeText.append("- ");
-            }else{
-                codeText.append(to_string(inCode[3]));
-            }
             
-            ofSetColor(88, 88, 4);
-            ofDrawRectRounded(ofGetWidth()/2-100, ofGetHeight()/2-50, 200, 100, 40);
-
-            ofSetColor(243, 214, 186);
-            bodyFont.drawString(codeText, ofGetWidth()/2-90, ofGetHeight()/2+30);
+            
+            string codeText ;
+            
+            if(!videoPlaying){
+                stageIcon(stage, &icon, ofGetWidth()/2, ofGetHeight()/2, ofGetWidth()/1.5);
+            
+                if(inCode[0] == 0){
+                    codeText.append("- ");
+                }else{
+                    codeText.append(to_string(inCode[0]));
+                }
+                if(inCode[1] == 0){
+                    codeText.append("- ");
+                }else{
+                    codeText.append(to_string(inCode[1]));
+                }
+                if(inCode[2] == 0){
+                    codeText.append("- ");
+                }else{
+                    codeText.append(to_string(inCode[2]));
+                }
+                if(inCode[3] == 0){
+                    codeText.append("- ");
+                }else{
+                    codeText.append(to_string(inCode[3]));
+                }
+                
+                ofSetColor(88, 88, 4);
+                ofDrawRectRounded(ofGetWidth()/2-100, ofGetHeight()/2-50, 200, 100, 40);
+                
+                ofSetColor(243, 214, 186);
+                bodyFont.drawString(codeText, ofGetWidth()/2-90, ofGetHeight()/2+30);
+            }
         }
+        
+        
     }else{
         
         //logic for serial com with rfid
@@ -196,7 +219,9 @@ void ofApp::keyPressed(int key){
                 if( isCode(stage-1,inCode ,codes)){
 
                     stageVideoPlayer(stage, &videoPlayer);//stage++ because the 0th video is the intro
+                    videoPlaying = true;
                     stage+=1;
+                    
                 }
                 iCode = 0;
                 for(int i=0; i<4; i++) {
@@ -242,8 +267,42 @@ void ofApp::stageVideoPlayer(int appStage, ofVideoPlayer *appVideoPlayer){
             break;
     }
     appVideoPlayer->play();
-
 }
+
+void ofApp::stageIcon(int appStage, ofImage *icon, int posX, int posY, int size){
+    cout<<"icon stage func:"<<appStage<<endl;
+    ofSetColor(255);
+    switch (appStage) {
+//        case 0:
+//            icon->load("icons/welcome.mp4");
+//            break;
+            
+        case 1:
+            icon->load("icons/1-corn.png");
+            break;
+            
+        case 2:
+            icon->load("icons/2-cow.png");
+            break;
+        case 3:
+            icon->load("icons/3-pigeon.png");
+            break;
+            
+        case 4:
+            icon->load("icons/4-candle.png");
+            break;
+            
+//        case 5:
+//            
+//            icon->load("videos/goodbye.mp4");
+//            break;
+            
+        default:
+            break;
+    }
+    icon->draw(posX-size/2, posY-size/2, size,size);
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
@@ -267,6 +326,7 @@ void ofApp::mousePressed(int x, int y, int button){
 
     if(x >= playX-playSize/2 && x <= playX+playSize/2 && y >= playY-playSize/2 && y <= playY+playSize/2){
         stageVideoPlayer(0, &videoPlayer);//play the intro
+        videoPlaying =true;
         stage+=1;
         cout<<"in if, stage:"<<stage<<endl;
     }

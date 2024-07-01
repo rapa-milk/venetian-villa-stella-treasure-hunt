@@ -24,5 +24,5 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg) override;
     
     void stageVideoPlayer (int appStage, ofVideoPlayer *appVideoPlayer);
-    
+    void stageIcon(int appStage, ofImage *icon, int posX, int posY, int size);
 };
