@@ -193,9 +193,9 @@ void ofApp::keyPressed(int key){
             iCode ++;
 
             if(iCode >= 4 ){
-                if( isCode(0,inCode ,codes)){
+                if( isCode(stage-1,inCode ,codes)){
 
-                    stageVideoPlayer(stage++, &videoPlayer);//stage++ because the 0th video is the intro
+                    stageVideoPlayer(stage, &videoPlayer);//stage++ because the 0th video is the intro
                     stage+=1;
                 }
                 iCode = 0;
