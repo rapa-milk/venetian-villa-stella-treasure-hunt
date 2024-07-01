@@ -7,7 +7,7 @@ ofTrueTypeFont headFont;
 
 ofVideoPlayer videoPlayer;
 
-int videoNum = 0;
+int playX ,playY, playSize;
 
 /**
  0: intro
@@ -43,6 +43,10 @@ void ofApp::setup(){
     //loading first video
 //    videoPlayer.load("videos/welcome.mp4");
     videoPlayer.setLoopState(OF_LOOP_NONE);
+    playX = ofGetWidth()/2;
+    playY = ofGetHeight()/2;
+    playSize=100;
+
 }
 
 //--------------------------------------------------------------
@@ -71,36 +75,45 @@ void ofApp::draw(){
 
     if(codeMode){
         
-        ofSetColor(88, 88, 4);
         
-        ofDrawRectRounded(ofGetWidth()/2-100, ofGetHeight()/2-50, 200, 100, 40);
         
-        ofSetColor(243, 214, 186);
-        
-        string codeText ;
-        if(inCode[0] == 0){
-            codeText.append("- ");
-        }else{
-            codeText.append(to_string(inCode[0]));
+        if(stage==0){
+            ofSetColor(88, 88, 4);
+
+            ofDrawEllipse(ofGetWidth()/2, ofGetHeight()/2, 100, 100);
+            ofSetColor(243, 214, 186);
+
+            bodyFont.drawString(">", ofGetWidth()/2-15, ofGetHeight()/2+20);
+
+        }else if(stage>0){
+            string codeText ;
+            if(inCode[0] == 0){
+                codeText.append("- ");
+            }else{
+                codeText.append(to_string(inCode[0]));
+            }
+            if(inCode[1] == 0){
+                codeText.append("- ");
+            }else{
+                codeText.append(to_string(inCode[1]));
+            }
+            if(inCode[2] == 0){
+                codeText.append("- ");
+            }else{
+                codeText.append(to_string(inCode[2]));
+            }
+            if(inCode[3] == 0){
+                codeText.append("- ");
+            }else{
+                codeText.append(to_string(inCode[3]));
+            }
+            
+            ofSetColor(88, 88, 4);
+            ofDrawRectRounded(ofGetWidth()/2-100, ofGetHeight()/2-50, 200, 100, 40);
+
+            ofSetColor(243, 214, 186);
+            bodyFont.drawString(codeText, ofGetWidth()/2-90, ofGetHeight()/2+30);
         }
-        if(inCode[1] == 0){
-            codeText.append("- ");
-        }else{
-            codeText.append(to_string(inCode[1]));
-        }
-        if(inCode[2] == 0){
-            codeText.append("- ");
-        }else{
-            codeText.append(to_string(inCode[2]));
-        }
-        if(inCode[3] == 0){
-            codeText.append("- ");
-        }else{
-            codeText.append(to_string(inCode[3]));
-        }
-        
-        bodyFont.drawString(codeText, ofGetWidth()/2-90, ofGetHeight()/2+30);
-        
     }else{
         
         //logic for serial com with rfid
@@ -174,21 +187,22 @@ void ofApp::keyPressed(int key){
                 return false;
             };
                     
+            
+            inCode[iCode] = key-48;
+            cout<<inCode[iCode]<<" ,"<<codes[stage*4][iCode]<<endl;
+            iCode ++;
+
             if(iCode >= 4 ){
                 if( isCode(0,inCode ,codes)){
 
-                    stageVideoPlayer(stage, &videoPlayer);
-
+                    stageVideoPlayer(stage++, &videoPlayer);//stage++ because the 0th video is the intro
+                    stage+=1;
                 }
                 iCode = 0;
                 for(int i=0; i<4; i++) {
                     inCode[i] = 0;
                 }
             }
-            inCode[iCode] = key-48;
-            cout<<inCode[iCode]<<" ,"<<codes[stage*4][iCode]<<endl;
-
-            iCode ++;
         }
     }
 
@@ -248,6 +262,14 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+    cout<<"x: "<<playX-playSize/2<<">="<<x<<"<="<<playX+playSize/2<<endl;
+    cout<<"y: "<<playY-playSize/2<<">="<<y<<"<="<<playY+playSize/2<<endl;
+
+    if(x >= playX-playSize/2 && x <= playX+playSize/2 && y >= playY-playSize/2 && y <= playY+playSize/2){
+        stageVideoPlayer(0, &videoPlayer);//play the intro
+        stage+=1;
+        cout<<"in if, stage:"<<stage<<endl;
+    }
 
 }
 
