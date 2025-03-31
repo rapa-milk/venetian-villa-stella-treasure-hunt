@@ -8,7 +8,7 @@ ofTrueTypeFont headFont;
 ofVideoPlayer videoPlayer;
 ofImage icon;
 
-int videoX, videoY, videoSize;
+int videoX, videoY, videoSizeX, videoSizeY;
 
 int playX ,playY, playSize;
 
@@ -50,9 +50,12 @@ void ofApp::setup(){
     playY = ofGetHeight()/2;
     playSize=100;
     
-    videoSize =1000;
-    videoX = ofGetWidth()/2- videoSize/2;
-    videoY = ofGetHeight()/2 - videoSize/2;
+    videoSizeX = ofGetWidth();
+    videoSizeY = ofGetHeight() ;
+//    videoX = ofGetWidth()/2- videoSize/2;
+//    videoY = ofGetHeight()/2 - videoSize/2;
+    videoX = ofGetWidth()/2- videoSizeX/2;
+    videoY = ofGetHeight()/2 - videoSizeY/2;
 
 
     videoPlayer.getIsMovieDone();
@@ -82,7 +85,7 @@ void ofApp::draw(){
 //    bodyFont.drawString("Body", 100,100);
     
     if(videoPlayer.isLoaded() ){
-        videoPlayer.draw(videoX,videoY, videoSize,videoSize);
+        videoPlayer.draw(videoX,videoY, videoSizeX,videoSizeY);
     }
     
     ofRectangle(100,100,100,100);
@@ -251,17 +254,16 @@ void ofApp::stageVideoPlayer(int appStage, ofVideoPlayer *appVideoPlayer){
             appVideoPlayer->load("videos/2-cow.mp4");
             break;
         case 3:
-            appVideoPlayer->load("videos/3-pigeon.mp4");
+            appVideoPlayer->load("videos/3-candle.mp4");
             break;
-            
         case 4:
-            appVideoPlayer->load("videos/4-candle.mp4");
+            appVideoPlayer->load("videos/4-pigeon.mp4");
             break;
             
-        case 5:
-            
-            appVideoPlayer->load("videos/goodbye.mp4");
-            break;
+//        case 5:
+//            
+//            appVideoPlayer->load("videos/goodbye.mp4");
+//            break;
             
         default:
             break;
@@ -285,11 +287,11 @@ void ofApp::stageIcon(int appStage, ofImage *icon, int posX, int posY, int size)
             icon->load("icons/2-cow.png");
             break;
         case 3:
-            icon->load("icons/3-pigeon.png");
+            icon->load("icons/3-candle.png");
             break;
             
         case 4:
-            icon->load("icons/4-candle.png");
+            icon->load("icons/4-pigeon.png");
             break;
             
 //        case 5:
@@ -324,7 +326,7 @@ void ofApp::mousePressed(int x, int y, int button){
     cout<<"x: "<<playX-playSize/2<<">="<<x<<"<="<<playX+playSize/2<<endl;
     cout<<"y: "<<playY-playSize/2<<">="<<y<<"<="<<playY+playSize/2<<endl;
 
-    if(x >= playX-playSize/2 && x <= playX+playSize/2 && y >= playY-playSize/2 && y <= playY+playSize/2){
+    if(stage == 0 && x >= playX-playSize/2 && x <= playX+playSize/2 && y >= playY-playSize/2 && y <= playY+playSize/2){
         stageVideoPlayer(0, &videoPlayer);//play the intro
         videoPlaying =true;
         stage+=1;
