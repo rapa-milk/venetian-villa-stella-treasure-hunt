@@ -1,6 +1,6 @@
-# RFID Video Player
+# Treasure Hunt with Video Guidance and Code Inputing
 
-This project uses an RFID sensor to trigger the playback of specific videos using Open Frameworks. Each RFID tag corresponds to a unique video, creating an interactive and automated game.
+This project is intended to be used with RFID sensor triggering the playback of specific videos using Open Frameworks, in the current prototype iteration it uses codes laser cuttend on the findable objects. Each RFID tag / code corresponds to a unique video, creating an interactive and automated game.
 
 ## Features
 
@@ -10,11 +10,14 @@ This project uses an RFID sensor to trigger the playback of specific videos usin
 ## Requirements
 
 - **Hardware**:
-  - RFID sensor and compatible RFID tags
-  - Arduino nano.
+  - Physical objects with codes printed on them
+  - **Optional**
+    - RFID sensor and compatible RFID tags
+    - Arduino nano.
 - **Software**:
   - Open Frameworks (version 0.12.0)
-  - Any necessary drivers or libraries for your RFID sensor
+  - **Optional**
+    - Any necessary drivers or libraries for your RFID sensor
 
 ## Installation
 
@@ -37,14 +40,14 @@ This project uses an RFID sensor to trigger the playback of specific videos usin
 
 ## Usage
 
-1. **Connect the RFID Sensor**:
+1. **[Optional] Connect the RFID Sensor**:
    - Connect your RFID sensor to the computer trough an arduino with the appropriate code in the arduino directory.
 
 2. **Run the Application**:
    - Launch the compiled application.
    - Follow the instructions on screen.
-     - Scan an RFID tag.
-     - The application will detect the RFID tag and play the corresponding video.
+     - Scan an RFID tag or input the code.
+     - The application will detect the RFID tag/code and play the corresponding video, if the tag/code is not the subsequent it will allert of the error and wait for the next attempt.
 
 
 ## License
