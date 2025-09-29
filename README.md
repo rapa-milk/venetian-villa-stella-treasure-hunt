@@ -2,6 +2,8 @@
 
 This project is intended to be used with RFID sensor triggering the playback of specific videos using Open Frameworks, in the current prototype iteration it uses codes laser cuttend on the findable objects. Each RFID tag / code corresponds to a unique video, creating an interactive and automated game.
 
+The game was created as an interactive experience for children visiting the newly opened Tenuta Stellà (for more information visit: [https://www.tenuta-stella.it/](https://www.tenuta-stella.it/) ).
+
 ## Features
 
 - **RFID Integration**: Utilizes an RFID sensor to read tags connected to an arduino.
